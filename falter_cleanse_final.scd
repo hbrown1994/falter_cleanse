@@ -1,9 +1,3 @@
-// Interface plugged in
-// INTERFACE SETTING SYSTEM PREF
-// boot system
-// set midi controller
-
-
 
 (
 /*
