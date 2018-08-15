@@ -1,4 +1,4 @@
-Falter CLeanse
+Falter Cleanse
 for Viola & Computer
 Hunter Brown
 ©2018
