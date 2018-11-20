@@ -1,5 +1,10 @@
+
+//INIT buffer for FFT processing
 ~fftBuff = Buffer.alloc(s, 2048, 1);
 
+//Adds all buffers in the "buffers" folder to a dictionary array.
+
+//Stereo Buffers
 b = Dictionary.new;
 PathName(~buffers_path).entries.do{
 	arg subfolder;
@@ -15,6 +20,7 @@ PathName(~buffers_path).entries.do{
 		);
 	};
 
+//Mono Buffers
 m = Dictionary.new;
 PathName(~buffers_path).entries.do{
 	arg subfolder;

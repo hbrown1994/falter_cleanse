@@ -1,4 +1,12 @@
-	MIDIdef.cc(\knob_1, {
+//Connect MIDI controllers
+
+MIDIClient.init(4, 4, verbose: true);
+
+MIDIIn.connectAll;
+
+//MIDI functions for real-time control during the performance.
+
+    MIDIdef.cc(\knob_1, {
 		arg val;
 		~knob_1 = val.linlin(0, 127, -60.0, 0.0);
 

@@ -20,7 +20,6 @@ For more information, feel free to contact Hunter at hunterbrownmusic1@gmail.com
 /*_______________________________________________________________________________________________________________________________________________________________________________*/
 
 
-
 /*______________________________________________ 1. Server Configuration ______________________________________________*/
 s = Server.local;
 s.newBusAllocators;
@@ -28,34 +27,35 @@ s.latency = 0.05;
 ServerBoot.removeAll;
 ServerTree.removeAll;
 ServerQuit.removeAll;
-Server.local.options.numOutputBusChannels = 5;    // change number of input and output channels
+Server.local.options.numOutputBusChannels = 5;
 Server.local.options.numInputBusChannels = 3;
 o=s.options;
 o.memSize = 2.pow(20);
 
 /*______________________________________________ 2. Global Variables ______________________________________________*/
+//Mic Inputs from Interface
 ~viola_in = 0;
-~micchannel_1 = 0;
-~micchannel_2 = 2;
-~channelAmount = 3;
+~viola_contact_in = 1;
+
+//Init Cue Number, Sub Output, and number of channels
 ~cue=0;
 ~sub_out=0;
+~channelAmount = 3: //1 for stereo, 3 for quad
 
+//Init File Paths
 ~buffers_path = PathName(thisProcess.nowExecutingPath).parentPath++"buffers/";
 ~synth_def_path = PathName(thisProcess.nowExecutingPath).parentPath++"synth_defs/";
 ~init_path = PathName(thisProcess.nowExecutingPath).parentPath++"init/";
 ~events_path = PathName(thisProcess.nowExecutingPath).parentPath++"events/";
 
-
-//3. Make Buffers
 /*______________________________________________ 3. Buffers ______________________________________________*/
 ~makeBuffers = {
-    thisProcess.interpreter.executeFile(~init_path++"make_buffers.scd");
+thisProcess.interpreter.executeFile(~init_path++"make_buffers.scd");
 };
 
 /*______________________________________________ 4. Nodes ______________________________________________*/
 ~makeNodes = {
-    thisProcess.interpreter.executeFile(~init_path++"make_nodes.scd");
+thisProcess.interpreter.executeFile(~init_path++"make_nodes.scd");
 };
 
 /*______________________________________________ 5. MIDI ______________________________________________*/
@@ -67,11 +67,9 @@ thisProcess.interpreter.executeFile(~init_path++"make_midi.scd");
 /*______________________________________________ 6. Events/Arrays ______________________________________________*/
 ~makeEvents = {
 
-	MIDIClient.init(4, 4, verbose: true);
-
-	MIDIIn.connectAll;
-
 	e = Dictionary.new;
+
+	//The below function adds all cues (or events) in the "events" folder to a dictionary array.
 
     PathName(~events_path).entries.size.do{
 
@@ -91,7 +89,8 @@ thisProcess.interpreter.executeFile(~init_path++"make_gui.scd");
 };
 
 /*______________________________________________ 8. Cleanup ______________________________________________*/
-~cleanup = { // kills all processes on server quit
+// Remove all processes on server on quit.
+~cleanup = {
 	s.newBusAllocators;
 	ServerBoot.removeAll;
 	ServerTree.removeAll;
@@ -106,12 +105,14 @@ ServerQuit.add(~cleanup); // "ServerQuit" happens when server is Quit.
 
 /*______________________________________________ 9. Busses & SynthDefs ______________________________________________*/
 
-s.waitForBoot({ // Wait to boot server once contained functions have been evaluated.
+s.waitForBoot({ //Wait to boot server once contained functions have been evaluated.
 
+	//Make Busses
     thisProcess.interpreter.executeFile(~init_path++"make_busses.scd");
 
 	s.sync;
 
+	//The below function adds all SynthDefs in the "synth_defs" folder to the server.
 	PathName(~synth_def_path).entries.size.do{
 
 		arg count=0;
@@ -130,7 +131,6 @@ s.waitForBoot({ // Wait to boot server once contained functions have been evalua
 	s.sync;
 	s.meter;
 	"done".postln;
-
 });
 )
 

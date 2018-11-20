@@ -1,10 +1,10 @@
-	e.add(\7 -> {
+e.add(\7 -> {
 
-    c[1].children[6].value_(0);//Off
+	c[1].children[6].value_(0);//Off
 	c[1].children[7].value_(1);//On
 
 
-~cringle = Pdef(
+	~cringle = Pdef(
 		\cringle,
 		Pbind(
 			\instrument, \bpfbuf,
@@ -26,7 +26,7 @@
 	).play(SystemClock);
 
 
-		~glitch_2.set(\inputbus_Mic, ~fxBus_contact_mic, \inputbus_Samples, ~delayIn, \pitchMapLo, 0.5 , \pitchMapHi, 1.0, \cvbus, ~outputamp, \gate, 1, \allPassMix, 1, \glitchSpeed, 3, \toggleGate, 0, \atk, 30, \delayRandLo, 0.4, \delayRandHi, 7, \brickMod, 15, \brickMult, 1, \amp, ~glitch_numBox.value, \rel, 0.05, \decayLo, 0.7, \decayHi, 2);
+	~glitch_2.set(\inputbus_Mic, ~fxBus_contact_mic, \inputbus_Samples, ~delayIn, \pitchMapLo, 0.5 , \pitchMapHi, 1.0, \cvbus, ~outputamp, \gate, 1, \allPassMix, 1, \glitchSpeed, 3, \toggleGate, 0, \atk, 30, \delayRandLo, 0.4, \delayRandHi, 7, \brickMod, 15, \brickMult, 1, \amp, ~glitch_numBox.value, \rel, 0.05, \decayLo, 0.7, \decayHi, 2);
 
-		~glitch = Synth(\glitchy_freeze, [\inputbus_Mic, ~fxBus, \inputbus_Samples, ~delayIn, \pitchMapLo, 0.8 , \pitchMapHi, 1.0, \cvbus, ~outputamp, \gate, 1, \allPassMix, 0, \glitchSpeed, 1, \toggleGate, 0, \atk, 30, \delayRandLo, 1, \delayRandHi, 2, \brickMod, 20, \brickMult, 0.2, \amp, ~glitch_numBox.value, \rel, 0.05], target: ~fx).register;
+	~glitch = Synth(\glitchy_freeze, [\inputbus_Mic, ~fxBus, \inputbus_Samples, ~delayIn, \pitchMapLo, 0.8 , \pitchMapHi, 1.0, \cvbus, ~outputamp, \gate, 1, \allPassMix, 0, \glitchSpeed, 1, \toggleGate, 0, \atk, 30, \delayRandLo, 1, \delayRandHi, 2, \brickMod, 20, \brickMult, 0.2, \amp, ~glitch_numBox.value, \rel, 0.05], target: ~fx).register;
 });

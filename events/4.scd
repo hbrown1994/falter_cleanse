@@ -1,6 +1,5 @@
 e.add(\4 -> {
 
-	"cue 3".postln;
 	c[1].children[3].value_(0);//Off
 	c[1].children[4].value_(1);//On
 
@@ -27,6 +26,4 @@ e.add(\4 -> {
 			\group, ~patterns,
 		);
 	).play(SystemClock);
-
-
 });

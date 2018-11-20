@@ -1,6 +1,5 @@
-	e.add(\3 -> {
+e.add(\3 -> {
 
-	"cue 2".postln;
 	c[1].children[2].value_(0);//Off
 	c[1].children[3].value_(1);//On
 

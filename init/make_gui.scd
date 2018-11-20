@@ -1,8 +1,12 @@
+//GUI for real-time control over the SuperCollider code.
+
+//Makes Window to house GUI objects
 Window.closeAll;
 w = Window("Falter/Cleanse", Rect(750,50,1200,600))
 .front
 .alwaysOnTop_(true);
 
+/*______________________________________________ 1. Static Text Labels for all 8 Composite Views  ______________________________________________*/
 // Composite View 0//////////////
 StaticText(w, Rect(0,0,580,40))
 .string_("Falter/Cleanse")
@@ -27,15 +31,11 @@ StaticText(w, Rect(602,5,580,30))
 .font_(Font(size: 30));
 
 // Composite View 2//////////////
-
-
 StaticText(w, Rect(0,200,70,30))
 .string_("Glass")
 .align_(\center)
 .front
 .font_(Font(size: 15));
-
-
 
 StaticText(w, Rect(120,200,70,30))
 .string_("Hi Tones")
@@ -54,8 +54,6 @@ StaticText(w, Rect(351,200,90,30))
 .align_(\center)
 .front
 .font_(Font(size: 15));
-
-
 
 StaticText(w, Rect(400,370,70,30))
 .string_("hz")
@@ -99,7 +97,7 @@ StaticText(w, Rect(160,570,70,30))
 .front
 .font_(Font(size: 15));
 
-//
+// Composite View 3//////////////
 StaticText(w, Rect(640,570,70,30))
 .string_("dbs")
 .align_(\center)
@@ -124,7 +122,7 @@ StaticText(w, Rect(880,570,70,30))
 .front
 .font_(Font(size: 15));
 
-
+// Composite View 4-7//////////////
 StaticText(w, Rect(0,400,75,30))
 .string_("Dry Viola")
 .align_(\center)
@@ -175,25 +173,12 @@ StaticText(w, Rect(819,400,110,30))
 .font_(Font(size: 15));
 
 
+/*______________________________________________ 2. Assign GUI objects to composite views  ______________________________________________*/
 
-
-
-
-
-/*
-StaticText(w, Rect(950,200,200,200))
-.string_("Sine Tones")
-.align_(\center)
-.front
-.font_(Font(size: 30));
-*/
-
-
-
+// Create Composite Views ------------------------------------------
 
 w.view.decorator_(FlowLayout(w.bounds, 0@0, 0@0));
 
-// composite views
 c = Array.fill( 6, {
 	arg view;
 	view = CompositeView(w, 600@200)
@@ -201,21 +186,21 @@ c = Array.fill( 6, {
 
 	view.decorator_(FlowLayout(view.bounds, 10@25, 70@0));
 });
-//Fills the various composite views
+
+// Composite View 0: Init, Stop Reset, and Cue ------------------------------------------
 c[0].background_(Color(0, 0, 0));
 c[0].decorator_(FlowLayout(c[0].bounds, 90@40, 15@15)); // Array 0
 c[0].decorator.nextLine;
 c[0].decorator.nextLine;
 c[0].decorator.nextLine;
-Array.fill(1, {Button(c[0], 200@50).font_(Font(size: 30)).states_([["Initialization", Color.black, Color.gray(0.8)],["Initialized", Color.white, Color(0,0,0)]])}); //Dry Strings: Array 0
-
+Array.fill(1, {Button(c[0], 200@50).font_(Font(size: 30)).states_([["Initialization", Color.black, Color.gray(0.8)],["Initialized", Color.white, Color(0,0,0)]])});
 Array.fill(1, {Button(c[0], 200@50).font_(Font(size: 30)).states_([["Stop & Reset", Color.black, Color.gray(0.8)]])});
 
 c[0].decorator.nextLine;
 c[0].decorator_(FlowLayout(c[0].bounds, 190@140, 15@15)); // Array 0
-Array.fill(1, {Button(c[0], 200@50).font_(Font(size: 30)).states_([["Cue", Color.black, Color.gray(0.8)]])}); //Dry Strings: Array 0
+Array.fill(1, {Button(c[0], 200@50).font_(Font(size: 30)).states_([["Cue", Color.black, Color.gray(0.8)]])});
 
-
+// Composite View 1: Cues ------------------------------------------
 c[1].background_(Color(0, 0, 0));
 c[1].decorator_(FlowLayout(c[0].bounds, 15@15, 10@15)); // Array 1
 c[1].decorator.nextLine;
@@ -223,32 +208,35 @@ c[1].decorator.nextLine;
 Array.fill(36, {
 		arg i=(-1);
 		{i = i + 1};
-		Button(c[1], 35@35).states_([[i.asString, Color.black, Color.gray(0.8)],[i.asString, Color.white, Color(0,0,0)]])});//Dry Strings: Array 0
+		Button(c[1], 35@35).states_([[i.asString, Color.black, Color.gray(0.8)],[i.asString, Color.white, Color(0,0,0)]])});
 
+
+// Composite View 2: Audio Control ------------------------------------------
 c[2].background_(Color(1, 1, 1));
-c[3].background_(Color(1, 1, 1));
-c[4].background_(Color(1, 1, 1));
-c[5].background_(Color(1, 1, 1));
 
-
-Array.fill(4, {Slider(c[2], 50@150)});//Dry Strings: Array 2
+Array.fill(4, {Slider(c[2], 50@150)});
 c[2].decorator.nextLine;
-Array.fill(4, {NumberBox(c[2], 50@20)}); //Dry Strings: Array 2
+Array.fill(4, {NumberBox(c[2], 50@20)});
 
+// Composite View 3: Audio Control ------------------------------------------
+c[3].background_(Color(1, 1, 1));
 
-Array.fill(5, {Slider(c[4], 50@150)}); //Samples (Grain Buf, PLayBuf): Array 3
+// Composite View 4: Audio Control ------------------------------------------
+c[4].background_(Color(1, 1, 1));
+
+Array.fill(5, {Slider(c[4], 50@150)});
 c[4].decorator.nextLine;
 Array.fill(5, {NumberBox(c[4], 50@20)});
 
+// Composite View 5: Audio Control ------------------------------------------
 
-Array.fill(3, {Slider(c[5], 50@150)}); //Samples (Grain Buf, PLayBuf): Array 3
+c[5].background_(Color(1, 1, 1));
+
+Array.fill(3, {Slider(c[5], 50@150)});
 c[5].decorator.nextLine;
 Array.fill(3, {NumberBox(c[5], 50@20)});
 
-
-
-//Controls/////////////////////////////////////////////////
-//Compositie View 0 Dry Strings/////////////////////////////////////////////////
+/*______________________________________________ 3. INIT GUI Objects  ______________________________________________*/
 c[2].children[0].valueAction_(-60.0);
 c[2].children[1].valueAction_(-60.0);
 c[2].children[2].valueAction_(-60.0);
@@ -278,7 +266,7 @@ c[5].children[4].valueAction_(-60.0);
 c[5].children[5].valueAction_(-60.0);
 
 
-
+/*______________________________________________ 4. GUI Object Functionality  ______________________________________________*/
 ~init_button = c[0].children[0]
 .action_({
 	arg obj;
@@ -294,8 +282,6 @@ c[5].children[5].valueAction_(-60.0);
 .mouseDownAction_({e[~cue.asSymbol].value;
 })
 .mouseUpAction_({
-		//arg obj;
-		//if(obj.value == 1, {~cue = ~cue + 1.postln},{nil});
 		~cue = ~cue + 1;
 });
 
@@ -491,7 +477,7 @@ c[5].children[5].valueAction_(-60.0);
 		if(~glass.isPlaying,
 	{~glass.set(\amp, amp)}
 );
-~glass_numBox.value_(obj.value.linlin(0.0,1.0,-60, 1)); // updates numberbox with freq information.
+~glass_numBox.value_(obj.value.linlin(0.0,1.0,-60, 1));
 });
 ~glass_numBox = c[2].children[4]
 .decimals_(1)
@@ -516,7 +502,7 @@ c[5].children[5].valueAction_(-60.0);
 	{~hi_sine_2.set(\amp, amp)}
 );
 
-	~hi_sine_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~hi_sine_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~hi_sine_numBox = c[2].children[5]
 .decimals_(1)
@@ -540,7 +526,7 @@ c[5].children[5].valueAction_(-60.0);
 
 
 
-	~sub_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~sub_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~sub_numBox = c[2].children[6]
 .decimals_(1)
@@ -563,7 +549,7 @@ c[5].children[5].valueAction_(-60.0);
 	if(~contact_mic.isPlaying,
 	{~contact_mic.set(\hpf_freq, hpf_freq)}
 );
-~delay_feedback_numBox.value_(obj.value.linlin(0.0,1.0,30.0,100.0)); // updates numberbox with freq information.
+~delay_feedback_numBox.value_(obj.value.linlin(0.0,1.0,30.0,100.0));
 });
 ~delay_feedback_numBox = c[2].children[7]
 .decimals_(1)
@@ -582,7 +568,7 @@ c[5].children[5].valueAction_(-60.0);
 	if(~viola.isPlaying,
 	{~viola.set(\amp, amp)}
 );
-	~viola_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~viola_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 
 ~viola_numBox = c[4].children[5]
@@ -591,7 +577,7 @@ c[5].children[5].valueAction_(-60.0);
 .clipHi_(0.0)
 .action_({
 	arg obj;
-	~viola_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0)) // allows you to move slider via typing numbers
+	~viola_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0))
 });
 
 ~contact_mic_slider = c[4].children[1]
@@ -605,7 +591,7 @@ c[5].children[5].valueAction_(-60.0);
 
 
 
-~contact_mic_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+~contact_mic_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~contact_mic_numBox = c[4].children[6]
 .decimals_(1)
@@ -629,7 +615,7 @@ c[5].children[5].valueAction_(-60.0);
 	{~glitch_2.set(\amp, amp)}
 
 );
-	~glitch_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,5.0)); // updates numberbox with freq information.
+	~glitch_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,5.0));
 });
 
 ~glitch_numBox = c[4].children[7]
@@ -638,7 +624,7 @@ c[5].children[5].valueAction_(-60.0);
 .clipHi_(5.0)
 .action_({
 	arg obj;
-	~glitch_slider.valueAction_(obj.value.linlin(-60.0,5.0, 0.0,1.0)) // allows you to move slider via typing numbers
+	~glitch_slider.valueAction_(obj.value.linlin(-60.0,5.0, 0.0,1.0))
 });
 
 
@@ -650,7 +636,7 @@ c[5].children[5].valueAction_(-60.0);
 	if(~grain_delay.isPlaying,
 	{~grain_delay.set(\amp, amp)}
 );
-	~grain_delay_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~grain_delay_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~grain_delay_numBox = c[4].children[8]
 .decimals_(1)
@@ -658,7 +644,7 @@ c[5].children[5].valueAction_(-60.0);
 .clipHi_(0.0)
 .action_({
 	arg obj;
-	~grain_delay_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0)) // allows you to move slider via typing numbers
+	~grain_delay_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0))
 });
 
 ~ring_mod_slider = c[4].children[4]
@@ -669,7 +655,7 @@ c[5].children[5].valueAction_(-60.0);
 	if(~ring_mod.isPlaying,
 	{~ring_mod.set(\amp, amp)}
 );
-	~ring_mod_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~ring_mod_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~ring_mod_numBox = c[4].children[9]
 .decimals_(1)
@@ -677,7 +663,7 @@ c[5].children[5].valueAction_(-60.0);
 .clipHi_(0.0)
 .action_({
 	arg obj;
-	~ring_mod_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0)) // allows you to move slider via typing numbers
+	~ring_mod_slider.valueAction_(obj.value.linlin(-60.0,0.0, 0.0,1.0))
 });
 
 
@@ -685,7 +671,7 @@ c[5].children[5].valueAction_(-60.0);
 .action_({
 	arg obj;
 	var amp;
-	~stochastic_verb_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~stochastic_verb_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 
 		amp = obj.value.linlin(0.0,1.0,-60.0,-0.0);
 
@@ -708,7 +694,7 @@ c[5].children[5].valueAction_(-60.0);
 	var amp;
 	~sample_streams_val = obj.value.linlin(0.0,1.0,-60.0,0.0);
 
-	~sample_streams_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~sample_streams_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~sample_streams_numBox = c[5].children[4]
 .decimals_(1)
@@ -738,7 +724,7 @@ c[5].children[5].valueAction_(-60.0);
 	{~drone_3.set(\amp, amp)}
 );
 
-	~sine_tones_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0)); // updates numberbox with freq information.
+	~sine_tones_numBox.value_(obj.value.linlin(0.0,1.0,-60.0,0.0));
 });
 ~sine_tones_numBox = c[5].children[5]
 .decimals_(1)
