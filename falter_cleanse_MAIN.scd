@@ -33,7 +33,8 @@ Server.local.options.numInputBusChannels = 3;
 o=s.options;
 o.memSize = 2.pow(20);
 
-/*______________________________________________ 2. Global Variables ______________________________________________*/~viola_in = 0;
+/*______________________________________________ 2. Global Variables ______________________________________________*/
+~viola_in = 0;
 ~micchannel_1 = 0;
 ~micchannel_2 = 2;
 ~channelAmount = 3;
