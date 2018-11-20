@@ -1,0 +1,25 @@
+	SynthDef(\playbuf_1, {
+		arg bufnum1, bufnum2, bufnum3, bufnum4,  rate=1, trig, startPos=0, loop=1, amp=(-20), atk=0.05, dec=0.1, sus=1, rel=0.05, curve= (-8), gate=1, high_pass_freq=900, low_pass_freq=100, low_pass_mix=0, high_pass_mix=0, hpf_freq=20, lpf_freq=22000, fb_Mix, line_dur=60;
+		var sig1,sig2, sig3, sig4, env;
+		sig1 = PlayBuf.ar(1, bufnum1, Line.kr(1, 1, line_dur), trig, startPos, loop);
+		sig2 = PlayBuf.ar(1, bufnum2, Line.kr(1, 0.98, line_dur), trig, startPos, loop);
+		sig3 = PlayBuf.ar(1, bufnum3, Line.kr(1, 1.01, line_dur), trig, startPos, loop);
+		sig4 = PlayBuf.ar(1, bufnum4, Line.kr(1, 1.2, line_dur), trig, startPos, loop);
+		env = EnvGen.kr(Env.adsr(atk, dec, sus, rel, curve: curve), gate, doneAction: 2);
+		sig1 = LPF.ar(sig1 * env * amp.dbamp.lag(0.1), lpf_freq);
+		sig2 = LPF.ar(sig2 * env * amp.dbamp.lag(0.1), lpf_freq);
+		sig3 = LPF.ar(sig3 * env * amp.dbamp.lag(0.1), lpf_freq);
+		sig4 = LPF.ar(sig4 * env * amp.dbamp.lag(0.1), lpf_freq);
+		sig1 = HPF.ar(sig1, hpf_freq);
+		sig2 = HPF.ar(sig2, hpf_freq);
+		sig3 = HPF.ar(sig3, hpf_freq);
+		sig4 = HPF.ar(sig4, hpf_freq);
+		sig1 =XFade2.ar(sig1, sig1 * SinOscFB.ar({Rand(300, 2000)}, Line.kr(0, 7, 140), Line.kr(0, 1, 140)*2-1));
+		sig2 =XFade2.ar(sig2, sig2 * SinOscFB.ar({Rand(300, 2000)}, Line.kr(0, 7, 140), Line.kr(0, 1, 140)*2-1));
+	    sig3 =XFade2.ar(sig3, sig4 * SinOscFB.ar({Rand(300, 2000)}, Line.kr(0, 7, 140), Line.kr(0, 1, 140)*2-1));
+		sig4 =XFade2.ar(sig4, sig4 * SinOscFB.ar({Rand(300, 2000)}, Line.kr(0, 7, 140), Line.kr(0, 1, 140)*2-1));
+		Out.ar(0, sig1);
+		Out.ar(1, sig2);
+	    Out.ar(2, sig3);
+		Out.ar(3, sig4);
+	}).add;

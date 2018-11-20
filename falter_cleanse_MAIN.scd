@@ -1,0 +1,133 @@
+(
+/*
+Falter Cleanse
+Viola & Electronics
+Hunter Brown
+©2018
+
+Last Updated: 05/17/18
+1. Go to the Supercollider Menu and select Language->Evaluate File.
+2. Wait for Script to Run
+3. Once the program is finished booting -> Indicated by a "done" message in SuperCollider's Post Window -> Press the button labeled "Initialization." The string microphones and the "Dry String Sound" modules are activated. You can now test the dry string sounds.
+4. Once you are ready to start the piece, press the "Cue" button to actuate the first rehearsal cue.
+5. To Stop and Restart from any rehearsal cue -> Press "Stop & Reset" -> Press "Initialization" -> Select the rehearsal cue from which you wish to begin from the "Rehearsal Cues" Module -> Press "Cue" to actuate this rehearsal cue. -> Repeat as needed for rehearsal.
+6. If for any reason the comptuer part crashes or glitches -> Go to the Supercollider Menu and select Server -> Kill All Servers -> Then Repeat Steps 1 through 4.
+
+For more information, feel free to contact Hunter at hunterbrownmusic1@gmail.com
+*/
+
+//DO NOT ALTER ANY CODE BELOW THIS LINE////////////////////////////////////////////
+//1. server config
+s = Server.local;
+s.newBusAllocators;
+s.latency = 0.05;
+ServerBoot.removeAll;
+ServerTree.removeAll;
+ServerQuit.removeAll;
+Server.local.options.numOutputBusChannels = 5;    // change number of input and output channels
+Server.local.options.numInputBusChannels = 3;
+o=s.options;
+o.memSize = 2.pow(20);
+
+//2. initialize global variables
+~viola_in = 0;
+~micchannel_1 = 0;
+~micchannel_2 = 2;
+~channelAmount = 3;
+~cue=0;
+~sub_out=0;
+
+~buffers_path = PathName(thisProcess.nowExecutingPath).parentPath++"buffers/";
+~synth_def_path = PathName(thisProcess.nowExecutingPath).parentPath++"synth_defs/";
+~init_path = PathName(thisProcess.nowExecutingPath).parentPath++"init/";
+~events_path = PathName(thisProcess.nowExecutingPath).parentPath++"events/";
+
+
+//3. Make Buffers
+/*______________________________________________ 3. Buffers ______________________________________________*/
+~makeBuffers = {
+    thisProcess.interpreter.executeFile(~init_path++"make_buffers.scd");
+};
+
+/*______________________________________________ 4. Nodes ______________________________________________*/
+~makeNodes = {
+    thisProcess.interpreter.executeFile(~init_path++"make_nodes.scd");
+};
+
+/*______________________________________________ 5. MIDI ______________________________________________*/
+~makeMIDI = {
+thisProcess.interpreter.executeFile(~init_path++"make_midi.scd");
+};
+
+
+//5. Make Events/MIDI
+~makeEvents = {
+
+	MIDIClient.init(4, 4, verbose: true);
+
+	MIDIIn.connectAll;
+
+	e = Dictionary.new;
+
+    PathName(~events_path).entries.size.do{
+
+		arg count=0;
+
+		thisProcess.interpreter.executeFile(~events_path++PathName(~events_path).entries.at(count).fileName.asString);
+
+		count = count + 1;
+	};
+
+};
+
+//6. Make GUI
+// GUI////////////////////////////////////////////////////////////////////////////////
+~makeGui = {
+thisProcess.interpreter.executeFile(~init_path++"make_gui.scd");
+};
+
+//7. Make CleanUp
+~cleanup = { // kills all processes on server quit
+	s.newBusAllocators;
+	ServerBoot.removeAll;
+	ServerTree.removeAll;
+	ServerQuit.removeAll;
+};
+
+
+
+ServerBoot.add(~makeGui);
+ServerBoot.add(~makeBuffers); // "ServerBoot" happens when server boots.
+ServerQuit.add(~cleanup); // "ServerQuit" happens when server is Quit.
+
+//9. Make Busses & SynthDefs /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+s.waitForBoot({ // Wait to boot server once contained functions have been evaluated.
+
+    thisProcess.interpreter.executeFile(~init_path++"make_busses.scd");
+
+	s.sync;
+
+	PathName(~synth_def_path).entries.size.do{
+
+		arg count=0;
+
+		thisProcess.interpreter.executeFile(~synth_def_path++PathName(~synth_def_path).entries.at(count).fileName.asString);
+
+		count = count + 1;
+	};
+
+	s.sync;
+
+    ServerTree.add(~makeNodes);
+	ServerTree.add(~makeMIDI);
+	ServerTree.add(~makeEvents);
+	s.freeAll;
+	s.sync;
+	s.meter;
+	"done".postln;
+
+});
+)
+
+
