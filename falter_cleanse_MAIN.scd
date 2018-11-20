@@ -16,8 +16,12 @@ Last Updated: 05/17/18
 For more information, feel free to contact Hunter at hunterbrownmusic1@gmail.com
 */
 
-//DO NOT ALTER ANY CODE BELOW THIS LINE////////////////////////////////////////////
-//1. server config
+/*______________________________________________ DO NOT ALTER ANY CODE BELOW THIS LINE ______________________________________________*/
+/*_______________________________________________________________________________________________________________________________________________________________________________*/
+
+
+
+/*______________________________________________ 1. Server Configuration ______________________________________________*/
 s = Server.local;
 s.newBusAllocators;
 s.latency = 0.05;
@@ -29,8 +33,7 @@ Server.local.options.numInputBusChannels = 3;
 o=s.options;
 o.memSize = 2.pow(20);
 
-//2. initialize global variables
-~viola_in = 0;
+/*______________________________________________ 2. Global Variables ______________________________________________*/~viola_in = 0;
 ~micchannel_1 = 0;
 ~micchannel_2 = 2;
 ~channelAmount = 3;
@@ -60,7 +63,7 @@ thisProcess.interpreter.executeFile(~init_path++"make_midi.scd");
 };
 
 
-//5. Make Events/MIDI
+/*______________________________________________ 6. Events/Arrays ______________________________________________*/
 ~makeEvents = {
 
 	MIDIClient.init(4, 4, verbose: true);
@@ -80,13 +83,13 @@ thisProcess.interpreter.executeFile(~init_path++"make_midi.scd");
 
 };
 
-//6. Make GUI
-// GUI////////////////////////////////////////////////////////////////////////////////
+/*______________________________________________ 7. GUI ______________________________________________*/
+
 ~makeGui = {
 thisProcess.interpreter.executeFile(~init_path++"make_gui.scd");
 };
 
-//7. Make CleanUp
+/*______________________________________________ 8. Cleanup ______________________________________________*/
 ~cleanup = { // kills all processes on server quit
 	s.newBusAllocators;
 	ServerBoot.removeAll;
@@ -100,7 +103,7 @@ ServerBoot.add(~makeGui);
 ServerBoot.add(~makeBuffers); // "ServerBoot" happens when server boots.
 ServerQuit.add(~cleanup); // "ServerQuit" happens when server is Quit.
 
-//9. Make Busses & SynthDefs /////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*______________________________________________ 9. Busses & SynthDefs ______________________________________________*/
 
 s.waitForBoot({ // Wait to boot server once contained functions have been evaluated.
 
